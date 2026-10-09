@@ -210,24 +210,25 @@ export function About() {
         }
       }
     </style>
-    <section id="about">
+    <section id="about" class="bento-panel about-panel">
       <div class="container">
         <div class="about-section fade-up">
           <div class="about-left">
+            <span class="bento-eyebrow">PROFESSIONAL PROFILE</span>
             <div class="about-greeting">Hello, I'm</div>
             <h2 class="about-heading">Ian Kharl Ramos</h2>
             
             <p class="about-description">
-              Information Technology student with hands-on experience in software development, networking, and database management. I focus on creating engaging digital experiences and always strive to deliver the best solutions in every project I work on.
+              I’m an Information Technology graduate focused on web development, networking, and database management. I build clear, dependable digital experiences and enjoy turning practical requirements into useful applications.
             </p>
 
             <div class="about-quote">
-              "Leveraging technology to create meaningful digital experiences that solve real-world problems."
+              My approach combines thoughtful interface design, reliable data, and maintainable implementation.
             </div>
 
             <div class="about-buttons">
-              <a href="#" class="about-btn primary">📥 Download CV</a>
-              <a href="#projects" class="about-btn secondary">View Projects →</a>
+              <a href="#contact" class="about-btn primary">Get in touch</a>
+              <a href="#projects" class="about-btn secondary">Explore projects</a>
             </div>
           </div>
 

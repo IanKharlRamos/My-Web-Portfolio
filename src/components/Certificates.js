@@ -1,41 +1,44 @@
+import sqlCertificate from '../assets/cert1.jpg';
+import databaseCertificate from '../assets/cert2.jpg';
+import cloudCertificate from '../assets/cert3.jpg';
+
 export function Certificates() {
   const certs = [
     {
       title: 'Introduction to SQL',
       issuer: 'Simplilearn SkillUP',
       year: 'Aug 2024',
-      image: '/src/assets/cert1.jpg',
-      desc: 'Successfully completed the online course on Introduction to SQL, demonstrating initiative and commitment to advancing database skills.'
+      image: sqlCertificate,
+      desc: 'Completed an online course covering SQL fundamentals and relational database concepts.'
     },
     {
       title: 'Database Management System',
       issuer: 'Great Learning Academy',
       year: 'Aug 2024',
-      image: '/src/assets/cert2.jpg',
-      desc: 'For successfully completing a free online course on Database Management System, provided by Great Learning Academy.'
+      image: databaseCertificate,
+      desc: 'Completed coursework in database management concepts through Great Learning Academy.'
     },
     {
       title: 'AWS Educate Introduction to Cloud 101',
       issuer: 'Amazon Web Services Training',
       year: 'Aug 2024',
-      image: '/src/assets/cert3.jpg',
-      desc: 'Successfully completed AWS Educate Introduction to Cloud Computing 101 course, demonstrating comprehensive understanding of cloud computing fundamentals and AWS services.'
+      image: cloudCertificate,
+      desc: 'Completed AWS Educate Cloud 101, covering foundational cloud-computing concepts and AWS services.'
     }
   ];
 
   const renderCerts = () => certs.map((cert, i) => `
-    <div class="cert-card hoverable fade-up stagger-${i + 1}" onclick="openLightbox('${cert.image}', '${cert.title}')">
-      <div class="cert-image-wrapper">
+    <article class="cert-card hoverable fade-up stagger-${i + 1}">
+      <button class="cert-image-wrapper" type="button" aria-label="View certificate: ${cert.title}" title="View certificate" onclick="openLightbox('${cert.image}', '${cert.title}')">
         <img src="${cert.image}" alt="${cert.title}" class="cert-img" loading="lazy" />
         <div class="cert-overlay">
           <div class="cert-overlay-icon">
-            <svg width="32" height="32" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/>
             </svg>
-            <span>View Certificate</span>
           </div>
         </div>
-      </div>
+      </button>
       <div class="cert-info">
         <h3 class="cert-title">${cert.title}</h3>
         <p class="cert-desc">${cert.desc}</p>
@@ -44,7 +47,7 @@ export function Certificates() {
           <span class="cert-year">${cert.year}</span>
         </div>
       </div>
-    </div>
+    </article>
   `).join('');
 
   const setupLightbox = () => {
@@ -67,7 +70,7 @@ export function Certificates() {
       };
     }
   };
-  setTimeout(setupLightbox, 100);
+  setupLightbox();
 
   return `
     <style>
@@ -309,15 +312,18 @@ export function Certificates() {
       }
     </style>
 
-    <div id="cert-lightbox" onclick="if(event.target===this) closeLightbox()">
-      <button class="lb-close" onclick="closeLightbox()">&times;</button>
+    <div id="cert-lightbox" role="dialog" aria-modal="true" aria-label="Certificate preview" onclick="if(event.target===this) closeLightbox()">
+      <button class="lb-close" type="button" aria-label="Close certificate preview" onclick="closeLightbox()">&times;</button>
       <img class="lb-img" src="" alt="Certificate" />
       <p class="lb-title"></p>
     </div>
 
-    <section id="certificates">
+    <section id="certificates" class="bento-panel certificates-panel">
       <div class="container">
-        <h2 class="section-title fade-up">My <span>Certificates</span></h2>
+        <div class="bento-heading">
+          <span class="bento-icon">✳</span>
+          <div><span class="bento-eyebrow">LEARNING & GROWTH</span><h2 class="section-title fade-up">Credentials</h2></div>
+        </div>
         <div class="certs-grid">
           ${renderCerts()}
         </div>

@@ -1,3 +1,56 @@
+import { featuredProjects } from './Projects.js';
+
+export function initFeaturedProjects() {
+  const preview = document.querySelector('.featured-project-panel');
+  const image = preview?.querySelector('.hero-project-image');
+  const category = preview?.querySelector('.hero-project-category');
+  const title = preview?.querySelector('.hero-project-title');
+  const position = preview?.querySelector('.featured-project-position');
+  const previous = preview?.querySelector('.hero-project-previous');
+  const next = preview?.querySelector('.hero-project-next');
+
+  if (!preview || !image || !category || !title || !position || !previous || !next) return;
+
+  const imageCache = featuredProjects.map((project) => {
+    const preloadedImage = new Image();
+    preloadedImage.src = project.image;
+    return preloadedImage;
+  });
+  let activeIndex = 0;
+  let transitionTimeout;
+  const showProject = (index) => {
+    activeIndex = (index + featuredProjects.length) % featuredProjects.length;
+    const project = featuredProjects[activeIndex];
+
+    image.classList.add('is-changing');
+    window.clearTimeout(transitionTimeout);
+    transitionTimeout = window.setTimeout(() => {
+      image.alt = `${project.title} interface preview`;
+      category.textContent = project.category;
+      title.textContent = project.title;
+      position.textContent = `${String(activeIndex + 1).padStart(2, '0')} / ${String(featuredProjects.length).padStart(2, '0')}`;
+      position.setAttribute('aria-label', `Project ${activeIndex + 1} of ${featuredProjects.length}`);
+      const revealImage = () => requestAnimationFrame(() => image.classList.remove('is-changing'));
+      if (imageCache[activeIndex].complete) {
+        image.src = project.image;
+        revealImage();
+      } else {
+        imageCache[activeIndex].addEventListener('load', () => {
+          image.src = project.image;
+          revealImage();
+        }, { once: true });
+      }
+    }, 180);
+  };
+
+  previous.addEventListener('click', () => showProject(activeIndex - 1));
+  next.addEventListener('click', () => showProject(activeIndex + 1));
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.setInterval(() => showProject(activeIndex + 1), 3000);
+  }
+}
+
 export function Hero() {
   return `
     <style>
@@ -319,39 +372,54 @@ export function Hero() {
         }
       }
     </style>
-    <section id="hero">
+    <section id="hero" class="masthead">
       <div class="container hero-grid">
         <div class="hero-content">
-          <h1>
-            <span class="hero-word light">Frontend & Backend</span>
-            <span class="hero-word gradient">Developer</span>
-          </h1>
-          <p class="hero-subtitle">Network & Telecom Student</p>
-          <p class="hero-description">
-            Information Technology student with hands-on experience in software development, networking, and database management. I focus on creating engaging digital experiences and always strive to deliver the best solutions in every project I work on.
-          </p>
-          
-          <div class="hero-skills">
-            <div class="skill-badge">React</div>
-            <div class="skill-badge">Javascript</div>
-            <div class="skill-badge">Node.js</div>
-            <div class="skill-badge">Tailwind</div>
+          <div class="masthead-topline">
+            <p class="hero-subtitle">PORTFOLIO <span>·</span> INFORMATION TECHNOLOGY GRADUATE</p>
+            <a href="#contact" class="masthead-contact">Let’s talk <span>↗</span></a>
           </div>
-
-          <div class="hero-cta">
-            <a href="#projects" class="cta-btn primary">View Projects →</a>
-            <a href="#contact" class="cta-btn secondary">Contact Me 📧</a>
+          <h1>
+            <span class="hero-word light">Build thoughtfully.</span>
+            <span class="hero-word gradient">Make it useful.</span>
+          </h1>
+          <p class="hero-description">
+            I design and develop practical web and mobile applications, combining clear interfaces with dependable functionality.
+          </p>
+          <div class="tool-strip">
+            <div class="tool-strip-label"><span>CORE TECHNOLOGIES</span><strong>My technical toolkit</strong></div>
+            <div class="tool-strip-list" aria-label="Technologies: Laravel, MySQL, SQLite, PHP, JavaScript, Bootstrap, React, Node.js, Git, GitHub, Postman, Tailwind CSS">
+              <span>Laravel</span><i></i><span>MySQL</span><i></i><span>SQLite</span><i></i><span>PHP</span><i></i>
+              <span>JavaScript</span><i></i><span>Bootstrap</span><i></i><span>React</span><i></i><span>Node.js</span><i></i>
+              <span>Git</span><i></i><span>GitHub</span><i></i><span>Postman</span><i></i><span>Tailwind CSS</span>
+            </div>
           </div>
         </div>
+      </div>
+    </section>
+  `;
+}
 
-        <div class="hero-graphic">
-          <div class="graphic-container">
-            <div class="graphic-shape shape-2"></div>
-            <div class="graphic-shape shape-1"></div>
-            <div class="graphic-shape shape-3"></div>
-            <div class="glow-orb"></div>
-            <div class="glow-orb"></div>
-          </div>
+export function FeaturedProjectCard() {
+  return `
+    <section id="featured-project" class="featured-project-panel bento-panel">
+      <div class="bento-heading">
+        <span class="bento-icon">↗</span>
+        <div><span class="bento-eyebrow">SELECTED WORK</span><h2>Featured project</h2></div>
+        <span class="featured-project-position" aria-label="Project 1 of ${featuredProjects.length}">01 / ${String(featuredProjects.length).padStart(2, '0')}</span>
+      </div>
+      <a class="hero-project-link" href="#projects" aria-label="View all projects">
+        <img class="hero-project-image" src="${featuredProjects[0].image}" alt="${featuredProjects[0].title} interface preview" fetchpriority="high" />
+        <div class="hero-project-caption" aria-live="polite">
+          <div><span class="hero-project-category">${featuredProjects[0].category}</span><strong class="hero-project-title">${featuredProjects[0].title}</strong></div>
+          <span class="hero-project-arrow" aria-hidden="true">↗</span>
+        </div>
+      </a>
+      <div class="hero-project-controls">
+        <span>Rotates through selected projects</span>
+        <div class="hero-project-buttons">
+          <button type="button" class="hero-project-previous" aria-label="Show previous featured project">←</button>
+          <button type="button" class="hero-project-next" aria-label="Show next featured project">→</button>
         </div>
       </div>
     </section>

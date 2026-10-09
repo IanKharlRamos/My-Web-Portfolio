@@ -1,19 +1,27 @@
 export function Skills() {
   const skillsList = [
     { name: 'JavaScript', icon: '⚡' },
+    { name: 'GitHub', icon: '🐙' },
+    { name: 'Git', icon: '🔀' },
+    { name: 'Postman', icon: '📮' },
     { name: 'HTML5', icon: '🌐' },
     { name: 'CSS3', icon: '🎨' },
     { name: 'React.js', icon: '⚛️' },
     { name: 'React Native', icon: '📱' },
     { name: 'Node.js', icon: '🟩' },
     { name: 'TypeScript', icon: '📘' },
+    { name: 'PHP', icon: '🐘' },
+    { name: 'Laravel', icon: '⚙️' },
+    { name: 'Bootstrap', icon: '🅱️' },
+    { name: 'MySQL', icon: '🗄️' },
+    { name: 'SQLite', icon: '🗃️' },
     { name: 'Tailwind CSS', icon: '🌊' },
     { name: 'APIs & Backend', icon: '🔌' },
     { name: 'Mobile UI / UX', icon: '✨' },
   ];
 
-  const renderSkills = () => skillsList.map((skill, index) => `
-    <div class="skill-box hoverable fade-up stagger-${(index % 3) + 1}">
+  const renderSkills = (isDuplicate = false) => skillsList.map((skill) => `
+    <div class="skill-box" role="listitem"${isDuplicate ? ' aria-hidden="true"' : ''}>
       <div class="skill-icon-bg">
         <span class="skill-icon">${skill.icon}</span>
       </div>
@@ -79,11 +87,17 @@ export function Skills() {
         }
       }
     </style>
-    <section id="skills">
+    <section id="skills" class="bento-panel skills-panel">
       <div class="container">
-        <h2 class="section-title fade-up">My <span>Skills</span></h2>
-        <div class="skills-grid">
-          ${renderSkills()}
+        <div class="bento-heading">
+          <span class="bento-icon">✳</span>
+          <div><span class="bento-eyebrow">TECHNICAL TOOLKIT</span><h2 class="section-title fade-up">Skills & tools</h2></div>
+        </div>
+        <div class="skills-marquee" role="region" aria-label="Technical skills">
+          <div class="skills-marquee-track">
+            <div class="skills-marquee-group" role="list">${renderSkills()}</div>
+            <div class="skills-marquee-group" role="list" aria-hidden="true">${renderSkills(true)}</div>
+          </div>
         </div>
       </div>
     </section>

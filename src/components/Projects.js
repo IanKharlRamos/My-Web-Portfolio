@@ -1,3 +1,10 @@
+import hyperAccessImage from '../assets/HA.png';
+import agriDroneImage from '../assets/186da0bd-1aec-4b9b-b06e-df37aa84c4f3.jpg';
+import libraryImage from '../assets/Library.jpg';
+import vaccineImage from '../assets/Vaccine.jpg';
+import rentalImage from '../assets/Rent.jpg';
+import repairImage from '../assets/Repair.jpg';
+
 export function initProjects() {
   const modal = document.getElementById('project-modal');
   const modalImg = document.getElementById('modal-img');
@@ -6,99 +13,117 @@ export function initProjects() {
   const closeBtn = document.querySelector('.modal-close');
   const overlay = document.querySelector('.modal-overlay');
 
-  if (!modal) return;
+  if (!modal || !modalImg || !modalTitle || !modalDesc || !closeBtn || !overlay) return;
 
-  document.querySelectorAll('.btn-details').forEach((btn) => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const card = e.target.closest('.project-card');
+  let lastTrigger;
+
+  document.querySelectorAll('.btn-details').forEach((button) => {
+    button.addEventListener('click', (e) => {
+      const card = e.currentTarget.closest('.project-card');
+      if (!card) return;
       const title = card.querySelector('.project-title').textContent;
-      const desc = card.querySelector('.project-desc').textContent;
+      const desc = card.dataset.description || card.querySelector('.project-desc').textContent;
       const imgSrc = card.querySelector('.project-img').src;
 
+      lastTrigger = e.currentTarget;
       modalTitle.textContent = title;
       modalDesc.textContent = desc;
       modalImg.src = imgSrc;
+      modalImg.alt = `${title} project preview`;
 
       modal.classList.add('active');
+      modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+      closeBtn.focus();
     });
   });
 
   const closeModal = () => {
     modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    lastTrigger?.focus();
   };
 
   closeBtn.addEventListener('click', closeModal);
   overlay.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal.classList.contains('active')) closeModal();
+  });
 }
 
-export function Projects() {
-  const projectsList = [
+export const featuredProjects = [
     {
       title: 'Hyper Access Management',
-      category: 'ADMIN',
-      desc: 'Hyper Access Management — a centralized project administration dashboard that lets companies track project status in real time, archive completed projects (with restore), and monitor admin-to-user workflows. Includes role-based activity logs, assignment tracking, notifications, and audit history to keep teams accountable and projects traceable.',
-      image: '/src/assets/HA.png',
+      category: 'Project management',
+      desc: 'A centralized project administration dashboard for monitoring project status, managing assignments, and coordinating administrator-to-user workflows. Features include role-based activity logs, notifications, project archiving with restore, and audit history.',
+      summary: 'A project administration dashboard for progress tracking, assignments, and team activity.',
+      image: hyperAccessImage,
       demoAvailable: false
     },
     {
       title: 'AgriDroneScan',
-      category: 'AGRI',
-      desc: 'AgriDroneScan — a drone-first field intelligence platform that combines live drone flights with manual image/video uploads to scan and analyze agricultural fields. Operators can fly drones to capture imagery or manually transfer images and videos via the website; the platform stitches panoramas, runs AI-based detection to flag crop stress and pests, estimates field area, and generates shareable field reports with confidence scores. Key features: manual image/video transfer, automated drone ingestion, real-time mapping, AI inference (object detection), scan history, and exportable reports for agronomists and field teams.',
-      image: '/src/assets/186da0bd-1aec-4b9b-b06e-df37aa84c4f3.jpg',
+      category: 'Agriculture',
+      desc: 'An agricultural field-analysis platform that accepts drone imagery and manual image or video uploads. The proposed workflow combines panorama stitching, AI-assisted detection of crop stress and pests, field-area estimates, scan history, and exportable reports for field teams.',
+      summary: 'An agricultural field-analysis platform for imagery, crop insights, and shareable reports.',
+      image: agriDroneImage,
       demoAvailable: false
     },
     {
       title: 'Library Booking System',
-      category: 'EDU',
-      desc: 'School library booking system — students browse available books, reserve items, see due dates, and view penalties for late returns.',
-      image: '/src/assets/Library.jpg',
+      category: 'Education',
+      desc: 'A school library booking system that helps students browse the collection, reserve books, review due dates, and check late-return penalties.',
+      summary: 'A library system for browsing books, managing reservations, and tracking due dates.',
+      image: libraryImage,
       demoAvailable: false
     },
     {
       title: 'Vaccine Appointment Booking',
-      category: 'HEALTH',
-      desc: 'Online appointment platform for scheduling doctor visits and vaccine check-ups with calendar booking and reminders.',
-      image: '/src/assets/Vaccine.jpg',
+      category: 'Healthcare',
+      desc: 'An online appointment platform for scheduling doctor visits and vaccine check-ups, with calendar-based booking and appointment reminders.',
+      summary: 'An appointment platform for clinic visits and vaccine check-ups.',
+      image: vaccineImage,
       demoAvailable: false
     },
     {
       title: 'Room Rental Portal',
-      category: 'RENTAL',
-      desc: 'A room booking marketplace where users browse rooms, check availability, and reserve the room they choose.',
-      image: '/src/assets/Rent.jpg',
+      category: 'Property',
+      desc: 'A room-rental portal that enables users to browse listings, review availability, and reserve a suitable room.',
+      summary: 'A rental portal for browsing rooms, checking availability, and making reservations.',
+      image: rentalImage,
       demoAvailable: false
     },
     {
       title: 'Vehicle Repair Estimator',
-      category: 'AUTO',
-      desc: 'Repair service portal providing repair cost estimates, service shop booking, and real-time status updates for the customer\'s vehicle.',
-      image: '/src/assets/Repair.jpg',
+      category: 'Automotive',
+      desc: 'A vehicle service portal for requesting repair estimates, booking a service shop, and following repair progress through status updates.',
+      summary: 'A vehicle service portal for repair estimates, workshop bookings, and progress updates.',
+      image: repairImage,
       demoAvailable: false
     }
-  ];
+];
 
-  const renderProjects = () => projectsList.map((proj, i) => {
+export function Projects() {
+  const renderProjects = () => featuredProjects.map((proj, i) => {
     const demoLink = proj.demoAvailable
       ? `<a href="#" class="demo-link alive">Live Demo <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg></a>`
-      : `<span class="demo-link dead"></span>`;
+      : `<span class="demo-link dead">Case study</span>`;
 
     return `
-      <div class="project-card hoverable fade-up stagger-${i + 1}">
+      <article class="project-card hoverable fade-up stagger-${(i % 3) + 1}" data-description="${proj.desc}">
         <div class="project-img-wrapper">
-          <img src="${proj.image}" alt="${proj.title}" class="project-img base-img"/>
+          <img src="${proj.image}" alt="${proj.title} interface preview" class="project-img base-img" loading="lazy"/>
         </div>
         <div class="project-info">
+          <span class="project-category">${proj.category}</span>
           <h3 class="project-title">${proj.title}</h3>
-          <p class="project-desc">${proj.desc}</p>
+          <p class="project-desc">${proj.summary}</p>
           <div class="project-footer">
             ${demoLink}
-            <a href="#" class="btn-details">Details &rarr;</a>
+            <button type="button" class="btn-details">Details &rarr;</button>
           </div>
         </div>
-      </div>
+      </article>
     `;
   }).join('');
 
@@ -343,19 +368,23 @@ export function Projects() {
         line-height: 1.8;
       }
     </style>
-    <section id="projects">
+    <section id="projects" class="bento-panel projects-panel">
       <div class="container">
-        <h2 class="section-title fade-up">Featured <span>Projects</span></h2>
+        <div class="bento-heading">
+          <span class="bento-icon">▧</span>
+          <div>          <span class="bento-eyebrow">SELECTED WORK</span><h2 class="section-title fade-up">Projects</h2></div>
+          <span class="bento-heading-note">Ideas turned into useful tools</span>
+        </div>
         <div class="projects-grid">
           ${renderProjects()}
         </div>
       </div>
       
       <!-- Project Modal -->
-      <div id="project-modal" class="project-modal">
+      <div id="project-modal" class="project-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-desc">
         <div class="modal-overlay"></div>
         <div class="modal-content-wrapper">
-          <button class="modal-close">&times;</button>
+          <button type="button" class="modal-close" aria-label="Close project details">&times;</button>
           <img id="modal-img" src="" alt="Project Preview" />
           <div class="modal-text">
             <h3 id="modal-title"></h3>
